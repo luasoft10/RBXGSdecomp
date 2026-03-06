@@ -1,3 +1,4 @@
+#pragma once
 #include "v8datamodel/BrickColor.h"
 #include "v8tree/Instance.h"
 #include "util/ContentProvider.h"
@@ -26,6 +27,7 @@ namespace RBX
 
 		RakNet::BitStream& operator<<(RakNet::BitStream& stream, bool value);
 		RakNet::BitStream& operator<<(RakNet::BitStream& stream, int value);
+		RakNet::BitStream& operator<<(RakNet::BitStream& stream, long value);
 		RakNet::BitStream& operator<<(RakNet::BitStream& stream, unsigned int value);
 		RakNet::BitStream& operator<<(RakNet::BitStream& stream, unsigned char value);
 		RakNet::BitStream& operator<<(RakNet::BitStream& stream, float value);
@@ -36,6 +38,7 @@ namespace RBX
 
 		RakNet::BitStream& operator>>(RakNet::BitStream& stream, bool& value);
 		RakNet::BitStream& operator>>(RakNet::BitStream& stream, int& value);
+		RakNet::BitStream& operator>>(RakNet::BitStream& stream, long& value);
 		RakNet::BitStream& operator>>(RakNet::BitStream& stream, unsigned int& value);
 		RakNet::BitStream& operator>>(RakNet::BitStream& stream, unsigned char& value);
 		RakNet::BitStream& operator>>(RakNet::BitStream& stream, float& value);
@@ -60,10 +63,6 @@ namespace RBX
 			void deserializeString(Reflection::Property& property, RakNet::BitStream& bitStream);
 			void receive(RakNet::BitStream& stream, const Name*& value);
 			void receive(RakNet::BitStream& stream, std::string& value);
-			//StringReceiver(const StringReceiver&);
-			StringReceiver();
-			~StringReceiver();
-			//StringReceiver& operator=(const StringReceiver&);
 		};
 
 		class StringSender
@@ -73,7 +72,6 @@ namespace RBX
 			std::string strings[128];
 			int lastIndex;
 		public:
-			//StringSender(const StringSender&);
 			StringSender()
 				: lastIndex(0)
 			{
@@ -88,9 +86,6 @@ namespace RBX
 			bool trySend(RakNet::BitStream&, const char*);
 			bool trySend(RakNet::BitStream&, const Name&);
 			bool trySend(RakNet::BitStream&, const std::string&);
-
-			~StringSender();
-			//StringSender& operator=(const StringSender&);
 		};
 
 		class SharedStringDictionary : public StringSender, public StringReceiver, private boost::noncopyable
@@ -111,7 +106,6 @@ namespace RBX
 		protected:
 			std::map<Guid::Data, std::vector<WaitItem>> waitItems;
 		public:
-			//IdSerializer(const IdSerializer&);
 			IdSerializer() {}
 
 			void serializeId(RakNet::BitStream& stream, const Instance* instance);
@@ -123,8 +117,6 @@ namespace RBX
 			size_t numWaitingRefs() const;
 			void serializeRef(const Reflection::ConstProperty& property, RakNet::BitStream& bitStream);
 			void deserializeRef(Reflection::Property&, RakNet::BitStream&);
-			virtual ~IdSerializer();
-			//IdSerializer& operator=(const IdSerializer&);
 		protected:
 			static void setRefValue(WaitItem& wi, Instance* instance);
 		};

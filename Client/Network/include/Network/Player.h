@@ -3,8 +3,6 @@
 #include "Network/Players.h"
 #include "security/SecurityContext.h"
 #include "humanoid/Humanoid.h"
-#include "v8tree/Instance.h"
-#include "v8tree/Service.h"
 #include "v8datamodel/BrickColor.h"
 #include "v8datamodel/Backpack.h"
 #include "v8datamodel/Workspace.h"
@@ -19,9 +17,7 @@ namespace RBX
 			const boost::shared_ptr<Instance> character;
 		  
 		public:
-			//CharacterAdded(const CharacterAdded&);
 			CharacterAdded(Instance*);
-			~CharacterAdded();
 		};
 
 		struct CharacterRemoving
@@ -30,9 +26,7 @@ namespace RBX
 			const boost::shared_ptr<Instance> character;
 		  
 		public:
-			//CharacterRemoving(const CharacterRemoving&);
 			CharacterRemoving(Instance*);
-			~CharacterRemoving();
 		};
 
 		extern const char* sPlayer;
@@ -63,7 +57,6 @@ namespace RBX
 			void onCharacterChangedFrontend();
 			void registerLocalPlayerNotIdle();
 		public:
-			//Player(const Player&);
 			Player();
 			virtual ~Player();
 		public:
@@ -112,8 +105,6 @@ namespace RBX
 		private:
 			void onCharacterDied();
 			void doPeriodicIdleCheck();
-		public:
-			//Player& operator=(const Player&);
 
 		public:
 			static void onLocalPlayerNotIdle(ServiceProvider*);

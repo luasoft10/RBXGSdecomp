@@ -1,3 +1,4 @@
+#pragma once
 #include "reflection/reflection.h"
 #include "v8tree/Instance.h"
 #include "v8tree/Service.h"
@@ -23,10 +24,5 @@ namespace RBX
 		virtual void onServiceProvider(const ServiceProvider* oldProvider, const ServiceProvider* newProvider);
 	private:
 		void removeInstance(boost::shared_ptr<Instance> instance);
-	public:
-		//IdManager(const IdManager&);
-		IdManager();
-		virtual ~IdManager();
-		//IdManager& operator=(const IdManager&);
 	};
 }

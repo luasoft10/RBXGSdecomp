@@ -17,18 +17,14 @@ namespace RBX
 	};
 
 	template<typename Class, typename Event>
-	class Listener
+	class __declspec(novtable) Listener
 	{
 		friend class Notifier<Class, Event>;
 
 	protected:
 		virtual void onEvent(const Class*, Event) = 0;
 		Listener& operator=(const Listener&);
-		virtual ~Listener();
-
-	public:
-		//Listener(const Listener&);
-		Listener();
+		virtual ~Listener() {}
 	};
 
 	template<typename Class, typename Event>

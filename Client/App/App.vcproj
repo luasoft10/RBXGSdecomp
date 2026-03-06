@@ -810,6 +810,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\include\v8datamodel\Filters.h"
+					>
+				</File>
+				<File
 					RelativePath=".\include\v8datamodel\GlobalSettings.h"
 					>
 				</File>
@@ -1315,6 +1319,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\v8datamodel\Filters.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\v8datamodel\GlobalSettings.cpp"
 				>
 			</File>
@@ -1388,7 +1396,6 @@
 			</File>
 			<File
 				RelativePath=".\gui\Widget.cpp"
-
 				>
 			</File>
 		</Filter>
