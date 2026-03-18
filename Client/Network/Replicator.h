@@ -158,7 +158,7 @@ namespace RBX
 				const RakNetStatistics* statistics;
 			public:
 				size_t instanceCount;
-				size_t instancBits;
+				size_t instanceBits;
 
 			public:
 				ReplicatorStatsItem(const boost::shared_ptr<Replicator>&, const RakNetStatistics*);
