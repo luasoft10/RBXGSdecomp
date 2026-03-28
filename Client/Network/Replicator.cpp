@@ -384,7 +384,11 @@ namespace RBX
 
 		bool Replicator::sendItems()
 		{
-			if (canSendItems())
+			if (!canSendItems())
+			{
+				return false;
+			}
+			else
 			{
 				Profiling::Mark mark(*profileDataOut, false);
 				ItemSender sender(*this, peer);
@@ -403,12 +407,6 @@ namespace RBX
 				}
 
 				return sender.sentItems;
-			}
-			else
-			{
-				// 100% match when this path returns nothing, although it generates a warning and is undefined behavior
-				// On VC8 this should not cause a bug as the result of canSendItems() is in the AL register when this path is executed, which at that point must be equal to false
-				return false;
 			}
 		}
 
@@ -493,7 +491,7 @@ namespace RBX
 
 			stream.ReadBits((unsigned char*)&value, 2, true);
 
-			if (value < 1 || value > 3)
+			if (value < 1 || value > 3) // neither of Delete, New, ChangeProperty
 			{
 				stream.Read(value);
 			}
@@ -501,7 +499,7 @@ namespace RBX
 
 		void Replicator::Item::writeItemType(RakNet::BitStream& stream, ItemType value)
 		{
-			if ((unsigned)value - 1 <= 2) // value == ItemTypeDelete || value == ItemTypeNew
+			if (value >= 1 && value <= 3) // Delete, New, ChangeProperty
 			{
 				stream.WriteBits((unsigned char*)&value, 2, true);
 			}
