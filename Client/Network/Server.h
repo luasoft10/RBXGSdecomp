@@ -58,9 +58,9 @@ namespace RBX
 			int getClientCount();
 			virtual XmlElement* write();
 			virtual PluginReceiveResult OnReceive(RakPeerInterface*, Packet*);
-			void setServerManagerPing(std::string, std::string, int);
+			void setServerManagerPing(std::string pingUrl, std::string publicIP, int thumbnailId);
 		protected:
-			virtual void onServiceProvider(const ServiceProvider*, const ServiceProvider*);
+			virtual void onServiceProvider(const ServiceProvider* oldProvider, const ServiceProvider* newProvider);
 			virtual bool askAddChild(const Instance* instance) const
 			{
 				return fastDynamicCast<const ClientProxy>(instance) != NULL;

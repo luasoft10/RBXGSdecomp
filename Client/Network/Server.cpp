@@ -1,5 +1,6 @@
 #include <RakPeer.h>
 #include "Server.h"
+#include "IdManager.h"
 #include "API.h"
 #include "util/standardout.h"
 
@@ -65,6 +66,35 @@ namespace RBX
 			}
 		}
 
+		void Server::onServiceProvider(const ServiceProvider* oldProvider, const ServiceProvider* newProvider)
+		{
+			if (oldProvider)
+			{
+				players->setConnection(NULL);
+
+				if (rakPeer->IsActive())
+					rakPeer->Shutdown(1000);
+
+				removeAllChildren();
+
+				players.reset();
+			}
+
+			Peer::onServiceProvider(oldProvider, newProvider);
+
+			if (newProvider)
+			{
+				players = shared_from(newProvider->create<Players>());
+
+				players->setConnection(peerInterface());
+			}
+		}
+
+		void Server::setServerManagerPing(std::string pingUrl, std::string publicIP, int thumbnailId)
+		{
+			pingThread.reset(new worker_thread(boost::bind(&Server::ping, boost::weak_ptr<Server>(shared_from(this)), publicIP, thumbnailId, pingUrl), "rbx_serverping"));
+		}
+
 		Server::ClientProxy::ClientProxy(SystemAddress systemAddress, Server* server)
 			: Replicator(systemAddress, server->peerInterface()),
 			  server(server)
@@ -76,6 +106,25 @@ namespace RBX
 		void Server::ClientProxy::onSentMarker(long id)
 		{
 			sendPhysicsEnabled = true;
+		}
+
+		void Server::ClientProxy::sendTop()
+		{
+			RakNet::BitStream bitStream;
+
+			bitStream << 'K';
+
+			std::vector<Instance*>::iterator end = replicationContainers.end();
+
+			for (std::vector<Instance*>::iterator iter = replicationContainers.begin(); iter != end; iter++)
+			{
+				RBXASSERT(*iter != NULL);
+
+				serializeId(bitStream, *iter);
+				ServiceProvider::create<IdManager>(this)->addInstance(*iter);
+			}
+
+			peer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, remotePlayerId, false);
 		}
 	}
 }
