@@ -1926,6 +1926,10 @@
 				RelativePath=".\tool\DragUtilities.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\tool\MegaDragger.cpp"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>
