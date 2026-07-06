@@ -105,10 +105,10 @@ namespace RBX
 		return this->getMomentHollow(mass);
 	}
 
+	// 85% match
 	// TODO: remove noinline after Block::getMoment is moved into the header file
 	__declspec(noinline) G3D::Matrix3 Block::getMomentHollow(float mass) const
 	{
-
 		G3D::Vector3 grid = gridSize;
 		G3D::Vector3 I;
 
@@ -122,12 +122,13 @@ namespace RBX
 
 			float scaling = mass / (2 * area);
 
-			float temp = ((Z*Z*Z*Y)/3) + ((Z*Y*Y*Y)/3) + ((Y*Y*Y*X)/3) + (Z*Z*Y*X) + (Z*X*Y*Y) + ((X*Z*Z*Z)/3);
+			float temp = (Z*Z*Y)*X + (Y*Y*Y*Z)/3 + (Z*Z*Z*Y)/3;
+			temp += (Y*Y*Z)*X + (X*Y*Y*Y)/3 + (X*Z*Z*Z)/3;
 
 			I[i] = temp * scaling;
 		}
-		return Math::fromDiagonal(I);
 
+		return Math::fromDiagonal(I);
 	}
 
 	// NOTE: not the original function name
@@ -401,7 +402,9 @@ namespace RBX
 	G3D::Vector3 Block::getCenterToCorner(const G3D::Matrix3& rotation) const
 	{
 		if (cornerRadius < 5.0f)
+		{
 			return G3D::Vector3(cornerRadius, cornerRadius, cornerRadius);
+		}
 		else
 		{
 			G3D::Vector3 startValue = rotation * vertices[0];
