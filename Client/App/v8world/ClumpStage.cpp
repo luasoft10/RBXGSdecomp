@@ -661,16 +661,11 @@ namespace RBX
 		return true;
 	}
 
-	// impossible to match: cant get the specific std::set functions at the rigidjoint section to inline
 	bool ClumpStage::processPrimitives()
 	{
-		typedef std::set<PrimitiveEntry, PrimitiveSortCriterion>::const_iterator Iterator;
-
 		while (!primitives.empty())
 		{
-			Iterator it = primitives.end();
-			it--;
-
+			std::set<PrimitiveEntry, PrimitiveSortCriterion>::iterator it = --primitives.end();
 			Primitive* p = (*it).primitive;
 			primitivesErase(p);
 
@@ -681,11 +676,16 @@ namespace RBX
 			RigidJoint* r = p->getFirstRigid();
 			if (r)
 			{
-				for (; r != NULL; r = p->getNextRigid(r))
-				{
-					SCOPED(rigidZerosErase(r));
-					rigidOnesInsert(r);
-				}
+				// TODO: VERY UGLY - forces everything in this block to inline. 
+				// is there a better way of doing this?
+				SCOPED(SCOPED(
+					do
+					{
+						rigidZerosErase(r);
+						rigidOnesInsert(r);
+					}
+					while (r = p->getNextRigid(r));
+				););
 
 				return false;
 			}
@@ -773,15 +773,13 @@ namespace RBX
 			}
 			else
 			{
-				// NOTE: if you get this matching, you will also be able to match getMotorPower
 				const Primitive* p1 = c1->getRootPrimitive();
 				const Primitive* p0 = c0->getRootPrimitive();
-				PrimitiveSort ps1 = PrimitiveSort(p1);
-				PrimitiveSort ps0 = PrimitiveSort(p0);
 
 				Clump* root;
 				Clump* child;
-				if (ps0 < ps1)
+
+				if (PrimitiveSort(p0) < PrimitiveSort(p1))
 				{
 					root = c1;
 					child = c0;
@@ -880,25 +878,19 @@ namespace RBX
 		if (removeFromBuffers(r))
 			return;
 
-		Clump* c0 = r->getPrimitive(0)->getClump();
-		if (c0)
+		Clump* c = r->getPrimitive(0)->getClump();
+
+		if (c && c == r->getPrimitive(1)->getClump())
 		{
-			Clump* c1 = r->getPrimitive(1)->getClump(); 
-			if (c0 == r->getPrimitive(1)->getClump())
-			{
-				removeFromClump(c0, r);
-			}
-			else
-			{
-				destroyClump(c0);
-				Clump* c1 = r->getPrimitive(1)->getClump(); 
-				if (c1)
-					destroyClump(c1);
-			}
+			removeFromClump(c, r);
 		}
 		else
 		{
-			Clump* c1 = r->getPrimitive(1)->getClump(); 
+			Clump* c0 = r->getPrimitive(0)->getClump();
+			if (c0)
+				destroyClump(c0);
+			
+			Clump* c1 = r->getPrimitive(1)->getClump();
 			if (c1)
 				destroyClump(c1);
 		}
@@ -1002,7 +994,6 @@ namespace RBX
 		delete c;
 	}
 
-	// 71% match if the numClumps inside of the RBXASSERT has __declspec(noinline)
 	void ClumpStage::destroyClumpGuts(Clump* c)
 	{
 		typedef std::set<Primitive*>::const_iterator PrimIterator;
@@ -1071,8 +1062,6 @@ namespace RBX
 		}
 	}
 
-	// 53% match if downstreamOfStage has __forceinline
-	// TODO: std::vector::empty is inlining here when it shouldnt, matching this will be difficult
 	void ClumpStage::destroyAssembly(Assembly* a)
 	{
 		size_t removed = assemblies.erase(a);
@@ -1089,9 +1078,10 @@ namespace RBX
 			RBXASSERT(a->inStage(this));
 		}
 
-		while (!a->getMotors().empty())
+		std::vector<MotorJoint*>& motors = a->getMotors();
+		while (!motors.empty())
 		{
-			MotorJoint* m = a->getMotors().front();
+			MotorJoint* m = motors.front();
 			a->removeMotor(m);
 
 			motorsInsert(m);
@@ -1099,9 +1089,10 @@ namespace RBX
 				motorAnglesInsert(m);
 		}
 
-		while (!a->getInconsistentMotors().empty())
+		std::set<MotorJoint*>& inconsistentMotors = a->getInconsistentMotors();
+		while (!inconsistentMotors.empty())
 		{
-			MotorJoint* m = *a->getInconsistentMotors().begin();
+			MotorJoint* m = *inconsistentMotors.begin();
 
 			a->removeInconsistentMotor(m);
 			Assembly* a1 = a->otherAssembly(m);
@@ -1111,9 +1102,10 @@ namespace RBX
 			motorsInsert(m);
 		}
 
-		while (!a->getClumps().empty())
+		std::set<Clump*>& clumps = a->getClumps();
+		while (!clumps.empty())
 		{
-			Clump* c = *a->getClumps().begin();
+			Clump* c = *clumps.begin();
 			a->removeClump(c);
 
 			if (c->getAnchored())
@@ -1194,7 +1186,6 @@ namespace RBX
 		removeAnchor(p->getAnchorObject());
 	}
 
-	// 100% match if inOrDownstreamOfStage has __forceinline
 	void ClumpStage::onEdgeAdded(Edge* e)
 	{
 		RBXASSERT(e->getPrimitive(0)->inOrDownstreamOfStage(this));
@@ -1216,7 +1207,6 @@ namespace RBX
 		}
 	}
 
-	// 100% match if inOrDownstreamOfStage has __forceinline
 	void ClumpStage::onEdgeRemoving(Edge* e)
 	{
 		RBXASSERT(e->getPrimitive(0)->inOrDownstreamOfStage(this));
@@ -1301,15 +1291,20 @@ namespace RBX
 	void ClumpStage::removeFromClump(Clump* c, RigidJoint* r)
 	{
 		Primitive* p0 = SpanLink::isSpanningJoint(r);
-		Primitive* p1 = p0 ? r->otherPrimitive(p0) : NULL;
-		if (!p0 || p1->getClump()->spanningTreeAdjust(r))
-			rigidTwosInsert(r);
-		else
-			removeSpanningTreeFast(p1, r);
+
+		if (p0)
+		{
+			Primitive* p1 = (p0 == r->getPrimitive(0) ? r->getPrimitive(1) : r->getPrimitive(0)); // NOTE: not r->otherPrimitive()
+			if (!p0->getClump()->spanningTreeAdjust(r))
+			{
+				removeSpanningTreeFast(p1, r);
+				return;
+			}
+		}
+
+		rigidTwosInsert(r);
 	}
 
-	// 82% match if MotorJoint::isMotorJoint and RigidJoint::isRigidJoint has __forceinline
-	// MotorJoint::isMotorJoint and RigidJoint::isRigidJoint aren't matching 100%, preventing this from being matched
 	void ClumpStage::removeFromAssemblyFast(Primitive* p)
 	{
 		Assembly* a = p->getAssembly();
@@ -1321,26 +1316,27 @@ namespace RBX
 		{
 			for (; e != NULL; e = p->getNextEdge(e))
 			{
-				if (e->getEdgeType() == Edge::JOINT)
+				SCOPED( // TODO: see ClumpStage::processPrimitives
+				if (MotorJoint::isMotorJoint(e))
 				{
-					if (MotorJoint::isMotorJoint(e))
-						break;
+					destroyAssembly(p->getAssembly());
+					return;
 				}
 
-				if (e->getEdgeType() == Edge::CONTACT || RigidJoint::isRigidJoint(e))
+
+				if (!RigidJoint::isRigidJoint(e))
 				{
 					if (a->containsExternalEdge(e))
 						removeExternalEdge(e);
 					else if (a->containsInternalEdge(e))
 						removeInternalEdge(e);
 				}
+				);
 			}
-
-			destroyAssembly(p->getAssembly());
 		}
 	}
 
-	// 100% match if removeFromBuffers and rigidOnesFind have __forceinline
+	// 100% match if rigidOnesFind have __forceinline
 	void ClumpStage::removeFromClumpFast(Primitive* p, RigidJoint* toParent)
 	{
 		if (p->getAssembly())

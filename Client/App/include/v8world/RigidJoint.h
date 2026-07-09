@@ -34,16 +34,17 @@ namespace RBX
 		//RigidJoint& operator=(const RigidJoint&);
   
 	private:
-		static bool jointIsRigid(Joint*);
+		static bool jointIsRigid(Joint* j)
+		{
+			JointType type = j->getJointType();
+			return type == WELD_JOINT || type == SNAP_JOINT;
+		}
 	protected:
 		static void faceIdToCoords(Primitive* p0, Primitive* p1, NormalId nId0, NormalId nId1, G3D::CoordinateFrame& c0, G3D::CoordinateFrame& c1);
 	public:
-		// TODO: this is not a 100% match, please update!
-		// moved to the header as it is used by a function in ClumpStage
 		static bool isRigidJoint(Edge* e)
 		{
-			JointType type = Joint::getJointType(e);
-			return type == WELD_JOINT || type == SNAP_JOINT;
+			return Joint::isJoint(e) && jointIsRigid(rbx_static_cast<Joint*>(e));
 		}
 	};
 }
