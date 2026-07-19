@@ -18,16 +18,12 @@ namespace RBX
 				const size_t index;
 			  
 			public:
-				//Item(const Item&);
 				Item(const char* name, int value, size_t index)
 					: Descriptor(name),
 					  value(value),
 					  index(index)
 				{
 				}
-				virtual ~Item() {}
-			public:
-				//Item& operator=(const Item&);
 			};
 
 		protected:
@@ -35,8 +31,6 @@ namespace RBX
 			size_t enumCount;
 			size_t enumCountMSB;
 		
-		public:
-			//EnumDescriptor(const EnumDescriptor&);
 		protected:
 			EnumDescriptor(const char* typeName, const type_info& type);
 			virtual ~EnumDescriptor();
@@ -62,7 +56,6 @@ namespace RBX
 			{
 				return std::find_if(begin(), end(), boost::bind(&equalValue, _1, intValue)) != end();
 			}
-			//EnumDescriptor& operator=(const EnumDescriptor&);
 		  
 		public:
 			static std::vector<const EnumDescriptor*>::const_iterator enumsBegin()
@@ -94,8 +87,6 @@ namespace RBX
 			std::vector<Enum> indexToEnum;
 			std::vector<size_t> enumToIndex;
 		  
-		public:
-			//EnumDesc(const EnumDesc&);
 		private:
 			EnumDesc();
 		private:
@@ -199,7 +190,6 @@ namespace RBX
 					return enumToIndex[value];
 				return -1;
 			}
-			//EnumDesc& operator=(const EnumDesc&);
 		  
 		public:
 			static const EnumDesc& singleton()

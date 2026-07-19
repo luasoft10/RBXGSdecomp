@@ -57,7 +57,7 @@ namespace RBX
 			bool operator!=(const ClassDescriptor& other) const;
 		  
 		public:
-			static ClassDescriptor& rootDescriptor() // TODO: check
+			static ClassDescriptor& rootDescriptor()
 			{
 				static ClassDescriptor root;
 				return root;

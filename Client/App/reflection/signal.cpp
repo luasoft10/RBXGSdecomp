@@ -31,11 +31,15 @@ namespace RBX
 		boost::shared_ptr<SignalInstance> SignalDescriptor::getSignalInstance(SignalSource& source) const
 		{
 			if (!source.signals)
-				source.signals.reset(new std::map<const SignalDescriptor*, boost::shared_ptr<SignalInstance>>());
-
-			std::map<const SignalDescriptor*, boost::shared_ptr<SignalInstance>>::iterator iter = source.signals->find(this);
-			if (iter != source.signals->end())
-				return iter->second;
+			{
+				source.signals.reset(new std::map<const SignalDescriptor*, boost::shared_ptr<SignalInstance>>);
+			}
+			else
+			{
+				std::map<const SignalDescriptor*, boost::shared_ptr<SignalInstance>>::iterator iter = source.signals->find(this);
+				if (iter != source.signals->end())
+					return iter->second;
+			}
 
 			boost::shared_ptr<SignalInstance> signalInstance(newSignalInstance(source));
 			(*source.signals)[this] = signalInstance;
@@ -44,6 +48,15 @@ namespace RBX
 				signalCreatedHook(&source);
 
 			return signalInstance;
+		}
+
+		SignalInstance::~SignalInstance() {}
+
+		SignalSource::~SignalSource() {}
+
+		void SignalSource::disconnect_all_slots()
+		{
+			signals.reset();
 		}
 	}
 }

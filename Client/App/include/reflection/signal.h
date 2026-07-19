@@ -83,7 +83,7 @@ namespace RBX
 		};
 
 		class Signal;
-		class SignalDescriptor : public MemberDescriptor
+		class __declspec(novtable) SignalDescriptor : public MemberDescriptor
 		{
 		public:
 			typedef Signal Describing;
@@ -303,16 +303,16 @@ namespace RBX
 			SignalDesc(const char* name, const char* arg1name, const char* arg2name)
 				: SignalDescImpl(Class::classDescriptor(), name)
 			{
-				SignatureDescriptor::Item arg1(Name::declare(arg1name, -1), Type::singleton<FunctionTraits<typename CallbackSignature>::Arg1Type>());
+				SignatureDescriptor::Item arg1 = {&Name::declare(arg1name, -1), &Type::singleton<FunctionTraits<typename CallbackSignature>::Arg1Type>()};
 				signature.arguments.push_back(arg1);
 
-				SignatureDescriptor::Item arg2(Name::declare(arg2name, -1), Type::singleton<FunctionTraits<typename CallbackSignature>::Arg2Type>());
+				SignatureDescriptor::Item arg2 = {&Name::declare(arg2name, -1), &Type::singleton<FunctionTraits<typename CallbackSignature>::Arg2Type>()};
 				signature.arguments.push_back(arg2);
 			}
 			SignalDesc(const char* name, const char* arg1name)
 				: SignalDescImpl(Class::classDescriptor(), name)
 			{
-				SignatureDescriptor::Item arg1(Name::declare(arg1name, -1), Type::singleton<FunctionTraits<typename CallbackSignature>::Arg1Type>());
+				SignatureDescriptor::Item arg1 = {&Name::declare(arg1name, -1), &Type::singleton<FunctionTraits<typename CallbackSignature>::Arg1Type>()};
 				signature.arguments.push_back(arg1);
 			}
 			SignalDesc(const char* name)

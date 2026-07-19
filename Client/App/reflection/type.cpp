@@ -4,7 +4,6 @@ namespace RBX
 {
 	namespace Reflection
 	{
-		// TODO: check if type singletons are matching
 		template<>
 		const Type& Type::singleton<void>()
 		{
@@ -12,11 +11,20 @@ namespace RBX
 			return type;
 		}
 
-		// TODO: check ctor match
 		Value::Value()
-			: _type(&Type::singleton<void>()),
-			  value(NULL)
+			: _type(&Type::singleton<void>())
 		{
+		}
+
+		SignatureDescriptor::SignatureDescriptor()
+			: resultType(&Type::singleton<void>())
+		{
+		}
+
+		void SignatureDescriptor::addArgument(const Name& name, const Type& type, const Value& defaultValue)
+		{
+			Item i = {&name, &type, defaultValue};
+			arguments.push_back(i);
 		}
 	}
 }

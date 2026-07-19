@@ -1307,10 +1307,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\util\UIEvent.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\util\Units.cpp"
 				>
 			</File>

@@ -8,7 +8,7 @@ namespace RBX
 	namespace Reflection
 	{
 		class Function;
-		class FunctionDescriptor : public MemberDescriptor
+		class __declspec(novtable) FunctionDescriptor : public MemberDescriptor
 		{
 		public:
 			enum Security

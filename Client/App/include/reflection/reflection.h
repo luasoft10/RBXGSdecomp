@@ -156,7 +156,6 @@ namespace RBX
 				GetFunction get;
 			  
 			public:
-				//GetImpl(const GetImpl&);
 				GetImpl(GetFunction get)
 					: GetSet(),
 					  get(get)
@@ -176,7 +175,6 @@ namespace RBX
 				{
 					throw std::runtime_error("can't set value");
 				}
-				//GetImpl& operator=(const GetImpl&);
 			};
 
 			// Set only
@@ -187,7 +185,6 @@ namespace RBX
 				SetFunction set;
 			  
 			public:
-				//SetImpl(const SetImpl&);
 				SetImpl(SetFunction set)
 					: GetSet(),
 					  set(set)
@@ -207,7 +204,6 @@ namespace RBX
 					Class* o = (Class*)object;
 					(o->*set)(value);
 				}
-				//SetImpl& operator=(const SetImpl&);
 			};
 
 			// Get & Set
@@ -219,7 +215,6 @@ namespace RBX
 				SetFunction set;
 			  
 			public:
-				//GetSetImpl(const GetSetImpl&);
 				GetSetImpl(GetFunction get, SetFunction set)
 					: GetSet(),
 					  get(get),
@@ -241,19 +236,14 @@ namespace RBX
 					Class* o = (Class*)object;
 					(o->*set)(value);
 				}
-				//GetSetImpl& operator=(const GetSetImpl&);
 			};
 
 		public:
-			//PropDescriptor(PropDescriptor&);
 			template<typename GetFunction, typename SetFunction>
 			PropDescriptor(char const* name, char const* category, typename GetFunction get, typename SetFunction set, Functionality flags)
 				: TypedPropertyDescriptor(Class::classDescriptor(), name, category, getset(get, set), flags)
 			{
 			}
-			virtual ~PropDescriptor();
-		public:
-			//PropDescriptor& operator=(PropDescriptor&);
 
 		public:
 			// Note: int indicates that the input value is NULL
@@ -312,7 +302,6 @@ namespace RBX
 			std::auto_ptr<typename TypedPropertyDescriptor<Enum>::GetSet> getset;
 		  
 		public:
-			//EnumPropDescriptor(EnumPropDescriptor&);
 			template<typename GetFunction, typename SetFunction>
 			EnumPropDescriptor(char const* name, char const* category, typename GetFunction get, typename SetFunction set, Functionality flags);
 		public:
@@ -330,10 +319,6 @@ namespace RBX
 			virtual bool setStringValue(DescribedBase*, const std::string&) const;
 			virtual void readValue(DescribedBase*, const XmlElement*, IReferenceBinder&) const;
 			virtual void writeValue(const DescribedBase*, XmlElement*) const;
-		public:
-			virtual ~EnumPropDescriptor();
-		public:
-			//EnumPropDescriptor& operator=(EnumPropDescriptor&);
 		};
 
 		// BoundFuncDesc
@@ -361,7 +346,6 @@ namespace RBX
 			}
 
 		public:
-			//BoundFuncDesc(const BoundFuncDesc&);
 			BoundFuncDesc(
 				typename FunctionSig function,
 				const char* name,
@@ -394,11 +378,6 @@ namespace RBX
 			{
 				(o->*function)();
 			}
-		
-		public:
-			virtual ~BoundFuncDesc() {}
-		public:
-			//BoundFuncDesc& operator=(const BoundFuncDesc&);
 		};
 
 		// One argument
@@ -423,7 +402,6 @@ namespace RBX
 			}
 
 		public:
-			//BoundFuncDesc(const BoundFuncDesc&);
 			BoundFuncDesc(
 				typename FunctionSig function,
 				const char* name,
@@ -468,11 +446,6 @@ namespace RBX
 			{
 				(o->*function)(arg1.convert<typename Traits::Arg1Type>());
 			}
-		
-		public:
-			virtual ~BoundFuncDesc() {}
-		public:
-			//BoundFuncDesc& operator=(const BoundFuncDesc&);
 		};
 
 		// Two arguments
@@ -499,7 +472,6 @@ namespace RBX
 			}
 
 		public:
-			//BoundFuncDesc(const BoundFuncDesc&);
 			BoundFuncDesc(
 				typename FunctionSig function,
 				const char* name,
@@ -558,11 +530,6 @@ namespace RBX
 			{
 				(o->*function)(arg1.convert<typename Traits::Arg1Type>(), arg2.convert<typename Traits::Arg2Type>());
 			}
-
-		public:
-			virtual ~BoundFuncDesc() {}
-		public:
-			//BoundFuncDesc& operator=(const BoundFuncDesc&);
 		};
 
 		// Three arguments
@@ -585,7 +552,6 @@ namespace RBX
 			void declareSignature(const char* arg1Name, const char* arg2Name, const char* arg3Name);
 
 		public:
-			//BoundFuncDesc(const BoundFuncDesc&);
 			BoundFuncDesc(
 				typename FunctionSig function,
 				const char* name,
@@ -626,11 +592,6 @@ namespace RBX
 		
 		public:
 			virtual void execute(DescribedBase* instance, Arguments& arguments) const;
-		
-		public:
-			virtual ~BoundFuncDesc() {}
-		public:
-			//BoundFuncDesc& operator=(const BoundFuncDesc&);
 		};
 
 		// Four arguments
@@ -712,11 +673,6 @@ namespace RBX
 		
 		public:
 			virtual void execute(DescribedBase* instance, Arguments& arguments) const;
-		
-		public:
-			virtual ~BoundFuncDesc() {}
-		public:
-			//BoundFuncDesc& operator=(const BoundFuncDesc&);
 		};
 	}
 }

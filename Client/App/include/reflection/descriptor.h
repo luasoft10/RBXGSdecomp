@@ -8,9 +8,9 @@ namespace RBX
 {
 	namespace Reflection
 	{
-		// TODO: MemberDescriptorContainer<PropertyDescriptor>::declare and MemberDescriptorContainer<FunctionDescriptor>::declare use different sync functions, make sure thats happening
-		// rename to "sync" later too
-		static boost::recursive_mutex& sync_0()
+		// There are two different copies of this function due to it being static.
+		// They appear in both the reflection_function and reflection_object object files.
+		static boost::recursive_mutex& sync()
 		{
 			static boost::recursive_mutex s;
 			return s;
@@ -22,16 +22,17 @@ namespace RBX
 			const Name& name;
 	  
 		public:
-			//Descriptor(const Descriptor&);
 			Descriptor(const Name&);
+
 			Descriptor(const char* name)
 				: name(Name::declare(name, -1))
 			{
 				RBXASSERT(!this->name.empty());
 			}
-			virtual ~Descriptor() {}
-		public:
-			//Descriptor& operator=(const Descriptor&);
+
+			virtual ~Descriptor() 
+			{
+			}
 		};
 	}
 }

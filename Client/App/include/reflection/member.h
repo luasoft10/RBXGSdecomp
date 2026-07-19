@@ -2,6 +2,7 @@
 #include "reflection/descriptor.h"
 #include <iterator>
 #include <vector>
+#include <algorithm>
 
 namespace RBX
 {
@@ -10,7 +11,7 @@ namespace RBX
 		class DescribedBase;
 		class ClassDescriptor;
 
-		class MemberDescriptor : public Descriptor
+		class __declspec(novtable) MemberDescriptor : public Descriptor
 		{
 		public:
 			const Name& category;
@@ -23,11 +24,14 @@ namespace RBX
 				  owner(owner)
 			{
 			}
-			virtual ~MemberDescriptor();
+
+			virtual ~MemberDescriptor()
+			{
+			}
 
 		public:
-			bool isMemberOf(const DescribedBase*) const;
-			bool isMemberOf(const ClassDescriptor&) const;
+			bool isMemberOf(const DescribedBase* instance) const;
+			bool isMemberOf(const ClassDescriptor& classDescriptor) const;
 		};
 
 		template<typename TheDescriptor>
@@ -110,7 +114,6 @@ namespace RBX
 			MemberDescriptorContainer* base;
 
 		protected:
-			// TODO: check if matches
 			MemberDescriptorContainer(MemberDescriptorContainer* base)
 				: descriptors(),
 				  derivedContainers(),
@@ -118,14 +121,26 @@ namespace RBX
 			{
 				if (base)
 				{
-					boost::recursive_mutex::scoped_lock lock(sync_0());
+					boost::recursive_mutex::scoped_lock lock(sync());
 					mergeMembers(base);
 					base->derivedContainers.push_back(this);
 				}
 			}
 
 		public:
-			void declare(TheDescriptor*);
+			void declare(TheDescriptor* descriptor)
+			{
+				boost::recursive_mutex::scoped_lock lock(sync());
+
+				CollectionType::iterator bound = std::lower_bound(descriptors.begin(), descriptors.end(), descriptor, &compare);
+				if (bound == descriptors.end() || *bound != descriptor)
+					descriptors.insert(bound, descriptor);
+
+				for (std::vector<MemberDescriptorContainer*>::iterator iter = derivedContainers.begin(); iter != derivedContainers.end(); iter++)
+				{
+					(*iter)->declare(descriptor);
+				}
+			}
 
 			typename CollectionType::const_iterator descriptors_begin() const
 			{
@@ -210,10 +225,24 @@ namespace RBX
 				return ConstIterator::ConstIterator(descriptors_end(), instance);
 			}
 
-			void mergeMembers(const MemberDescriptorContainer*);
+		protected:
+			void mergeMembers(const MemberDescriptorContainer* source)
+			{
+				do
+				{
+					for (CollectionType::const_iterator iter = source->descriptors.begin(); iter != source->descriptors.end(); iter++)
+					{
+						declare(*iter);
+					}
+				}
+				while (source = source->base);
+			}
 
 		public:
-			static bool compare(const TheDescriptor*, const TheDescriptor*);
+			static bool compare(const TheDescriptor* a, const TheDescriptor* b)
+			{
+				return a->name < b->name;
+			}
 		};
 	}
 }

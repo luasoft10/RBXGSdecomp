@@ -18,7 +18,7 @@ namespace RBX
 			RBXASSERT(!lockedDown);
 
 			{
-				boost::recursive_mutex::scoped_lock lock(sync_0());
+				boost::recursive_mutex::scoped_lock lock(sync());
 				base.derivedClasses.push_back(this);
 			}
 		}

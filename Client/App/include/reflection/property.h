@@ -12,23 +12,23 @@ namespace RBX
 	namespace Reflection
 	{
 		class Property;
-		class PropertyDescriptor : public MemberDescriptor
+		class __declspec(novtable) PropertyDescriptor : public MemberDescriptor
 		{
 		public:
-			enum Functionality : size_t
+			enum Functionality
 			{
-				STANDARD = 5,
-				UI = 1,
-				STREAMING = 4,
-				LEGACY = 0
+				LEGACY    = 0,
+				UI        = 1 << 0,	// 1
+				STREAMING = 1 << 2,	// 4
+				STANDARD  = UI | STREAMING // 5
 			};
 
 		public:
 			typedef Property Describing;
 
 		private:
-			size_t bIsPublic : 1;
-			size_t bCanStreamWrite : 1;
+			unsigned bIsPublic : 1;
+			unsigned bCanStreamWrite : 1;
 
 		public:
 			const Type& type;
@@ -51,8 +51,8 @@ namespace RBX
 			virtual bool hasStringValue() const = 0;
 			virtual std::string getStringValue(const DescribedBase*) const = 0;
 			virtual bool setStringValue(DescribedBase*, const std::string&) const = 0;
-			XmlElement* write(const DescribedBase*, bool) const;
-			virtual void read(DescribedBase*, const XmlElement*, IReferenceBinder&) const;
+			XmlElement* write(const DescribedBase* instance, bool ignoreWriteProtection) const;
+			virtual void read(DescribedBase* instance, const XmlElement* element, IReferenceBinder& binder) const;
 
 		private:
 			virtual void writeValue(const DescribedBase*, XmlElement*) const = 0;

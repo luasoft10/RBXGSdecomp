@@ -28,8 +28,14 @@ namespace RBX
 			return toString().compare(other.toString());
 		}
 
-		bool operator <(const RBX::Name& other) const;
-		bool operator >(const RBX::Name& other) const;
+		bool operator <(const RBX::Name& other) const
+		{
+			return this != &other && this->name < other.name;
+		}
+		bool operator >(const RBX::Name& other) const
+		{
+			return this != &other && this->name > other.name;
+		}
 		bool operator ==(const char* name) const
 		{
 			return this->name.compare(name) == 0;

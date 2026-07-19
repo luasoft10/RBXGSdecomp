@@ -16,11 +16,34 @@ namespace RBX
 
 		PropertyDescriptor::PropertyDescriptor(ClassDescriptor& classDescriptor, const Type& type, const char* name, const char* category, Functionality flags)
 			: MemberDescriptor(classDescriptor, name, category),
-			  bIsPublic((flags & UI) != 0),
-			  bCanStreamWrite((flags & STREAMING) != 0),
+			  bIsPublic(((flags >> 0) & 1) != 0),
+			  bCanStreamWrite(((flags >> 2) & 1) != 0),
 			  type(type)
 		{
 			classDescriptor.PropertyContainer::declare(this);
+		}
+
+		void PropertyDescriptor::read(DescribedBase* instance, const XmlElement* element, IReferenceBinder& binder) const
+		{
+			readValue(instance, element, binder);
+		}
+
+		XmlElement* PropertyDescriptor::write(const DescribedBase* instance, bool ignoreWriteProtection) const
+		{
+			if (!ignoreWriteProtection)
+			{
+				if (isReadOnly())
+					return NULL;
+
+				if (!canStreamWrite())
+					return NULL;
+			}
+
+			XmlElement* element = new XmlElement(type.tag);
+			element->addAttribute(name_name, &this->name);
+
+			writeValue(instance, element);
+			return element;
 		}
 
 		std::vector<const EnumDescriptor*>& EnumDescriptor::allEnums()
