@@ -101,7 +101,7 @@ std::string TextXmlParser::readFirstTag()
 }
 
 // does not match
-static std::string decodeString(std::string source)
+std::string decodeString(std::string source)
 {
 	std::string result;
 
