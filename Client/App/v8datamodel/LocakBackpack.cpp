@@ -233,13 +233,13 @@ namespace RBX
 
 		for (int i = maxId; i > minId; i--)
 		{
-			LocalBackpackItem* aItem = getTypedChild<LocalBackpackItem>(i - 1);
-			LocalBackpackItem* bItem = getTypedChild<LocalBackpackItem>(i);
+			LocalBackpackItem* aItem = rbx_static_cast<LocalBackpackItem*>(getChild(i - 1));
+			LocalBackpackItem* bItem = rbx_static_cast<LocalBackpackItem*>(getChild(i));
 
 			bItem->setItem(aItem->getItem());
 		}
 
-		LocalBackpackItem* freeItem = getTypedChild<LocalBackpackItem>(minId);
+		LocalBackpackItem* freeItem = rbx_static_cast<LocalBackpackItem*>(getChild(minId));
 		freeItem->setItem(item);
 		lastRemovedIndex = -1;
 	}

@@ -32,7 +32,7 @@ namespace RBX
 	} \
 	while (0)
 #if defined(_DEBUG) || defined(_RELEASEASSERT)
-#define RBXASSERT(expr) SCOPED( if ( RBX::Debugable::assertAction == RBX::Debugable::CrashOnAssert) if (!(expr)) RBX::Debugable::doCrash(); )
+#define RBXASSERT(expr) SCOPED( if ( RBX::Debugable::assertAction == RBX::Debugable::CrashOnAssert ) if ( !(expr) ) RBX::Debugable::doCrash(); )
 #else
 #define RBXASSERT(expr)
 #endif
