@@ -171,7 +171,7 @@ namespace RBX
 
 		std::string command = Reflection::EnumDesc<BinType>::singleton().convertToString(binType) + "Tool";
 
-		Verb* verb = static_cast<DataModel*>(root)->getVerb(command);
+		Verb* verb = root->getVerb(command);
 		RBXASSERT(verb);
 
 		if (verb->isEnabled())

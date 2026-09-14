@@ -20,7 +20,7 @@ namespace RBX
 
 		if (dynamic_cast<Service*>(instance))
 		{
-			if (!instance->getClassName().empty())
+			if (instance->getClassName() != Name::getNullName())
 			{
 				RBXASSERT(!findServiceByClassName(instance->getClassName()));
 				serviceMap[&instance->getClassName()] = shared_from(instance);

@@ -183,27 +183,25 @@ std::string TextXmlParser::findNextToken(const std::string& contents, int& index
 	}
 
 	bool inQuotes = false;
-	if (i < contents.size())
-	{
-		size_t j;
-		for (j = i; j < contents.size(); j++)
-		{
-			if (contents[j] == '"')
-			{
-				inQuotes = !inQuotes;
-			}
-			else if (!inQuotes && whitespaces.data[contents[j]])
-			{
-				break;
-			}
-		}
+	size_t j = i;
 
-		if (j != i)
+	for (; j < contents.size(); j++)
+	{
+		if (contents[j] == '"')
 		{
-			std::string answer = contents.substr(i, j - i);
-			index = (int)j + 1;
-			return answer;
+			inQuotes = !inQuotes;
 		}
+		else if (!inQuotes && whitespaces.data[contents[j]])
+		{
+			break;
+		}
+	}
+
+	if (j != i)
+	{
+		std::string answer = contents.substr(i, j - i);
+		index = (int)j + 1;
+		return answer;
 	}
 
 	index = (int)contents.size();
