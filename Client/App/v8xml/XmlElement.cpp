@@ -346,15 +346,6 @@ XmlNameValuePair::XmlNameValuePair(const RBX::Name& tag, RBX::InstanceHandle han
 {
 }
 
-XmlNameValuePair::~XmlNameValuePair()
-{
-	clearValue();
-}
-
-XmlAttribute::~XmlAttribute()
-{
-}
-
 XmlAttribute* XmlElement::findAttribute(const RBX::Name& _tag)
 {
 	XmlAttribute* attribute;
