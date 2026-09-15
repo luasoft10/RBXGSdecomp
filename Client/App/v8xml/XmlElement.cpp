@@ -225,27 +225,6 @@ bool XmlNameValuePair::getValue(RBX::InstanceHandle& value) const
 	return false;
 }
 
-void XmlNameValuePair::setValue(std::string value)
-{
-	clearValue();
-	stringValue = new std::string(value);
-	valueType = STRING;
-}
-
-void XmlNameValuePair::setValue(RBX::ContentId contentId)
-{
-	clearValue();
-	contentIdValue = new RBX::ContentId(contentId);
-	valueType = CONTENTID;
-}
-
-void XmlNameValuePair::setValue(RBX::InstanceHandle handle)
-{
-	clearValue();
-	handleValue = new RBX::InstanceHandle(handle);
-	valueType = HANDLE;
-}
-
 template<>
 bool XmlNameValuePair::isValueType<RBX::ContentId>() const
 {
@@ -277,12 +256,6 @@ std::string XmlNameValuePair::toString(XmlWriter* writer) const
 	{
 	case NONE:
 		return "";
-	case NAME:
-		return nameValue->toString();
-	case STRING:
-		return *stringValue;
-	case CONTENTID:
-		return contentIdValue->toString();
 	case BOOL:
 		return RBX::StringConverter<bool>::convertToString(boolValue);
 	case INT:
@@ -291,6 +264,8 @@ std::string XmlNameValuePair::toString(XmlWriter* writer) const
 		return RBX::StringConverter<unsigned>::convertToString(uintValue);
 	case FLOAT:
 		return RBX::StringConverter<float>::convertToString(floatValue);
+	case NAME:
+		return nameValue->toString();
 	case HANDLE:
 		if (!handleValue->getTarget())
 		{
@@ -304,6 +279,10 @@ std::string XmlNameValuePair::toString(XmlWriter* writer) const
 			sprintf(buffer, "RBX%d", index);
 			return buffer;
 		}
+	case STRING:
+		return *stringValue;
+	case CONTENTID:
+		return contentIdValue->toString();
 	default:
 		RBXASSERT(0);
 		return "";
@@ -323,27 +302,6 @@ void XmlNameValuePair::replaceHandles(const std::map<RBX::Instance*, RBX::Instan
 			*handleValue = r->second;
 		}
 	}
-}
-
-XmlNameValuePair::XmlNameValuePair(const RBX::Name& tag, const char* text)
-	: tag(tag),
-	  valueType(STRING),
-	  stringValue(new std::string(text))
-{
-}
-
-XmlNameValuePair::XmlNameValuePair(const RBX::Name& tag, const std::string& text)
-	: tag(tag),
-	  valueType(STRING),
-	  stringValue(new std::string(text))
-{
-}
-
-XmlNameValuePair::XmlNameValuePair(const RBX::Name& tag, RBX::InstanceHandle handle)
-	: tag(tag),
-	  valueType(HANDLE),
-	  handleValue(new RBX::InstanceHandle(handle))
-{
 }
 
 XmlAttribute* XmlElement::findAttribute(const RBX::Name& _tag)

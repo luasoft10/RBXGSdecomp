@@ -83,7 +83,13 @@ private:
 	void clearValue() const;
 
 public:
-	XmlNameValuePair(const RBX::Name&, RBX::InstanceHandle);
+	XmlNameValuePair::XmlNameValuePair(const RBX::Name& tag, RBX::InstanceHandle handle)
+		: tag(tag),
+		  valueType(HANDLE),
+		  handleValue(new RBX::InstanceHandle(handle))
+	{
+	}
+
 	XmlNameValuePair(const RBX::Name&, float);
 	XmlNameValuePair(const RBX::Name&, bool);
 	XmlNameValuePair(const RBX::Name& tag, const RBX::Name* name)
@@ -102,8 +108,20 @@ public:
 	}
 
 	XmlNameValuePair(const RBX::Name&, RBX::ContentId);
-	XmlNameValuePair(const RBX::Name&, const char*);
-	XmlNameValuePair(const RBX::Name&, const std::string&);
+	XmlNameValuePair::XmlNameValuePair(const RBX::Name& tag, const char* text)
+		: tag(tag),
+		  valueType(STRING),
+		  stringValue(new std::string(text))
+	{
+	}
+
+	XmlNameValuePair::XmlNameValuePair(const RBX::Name& tag, const std::string& text)
+		: tag(tag),
+		  valueType(STRING),
+		  stringValue(new std::string(text))
+	{
+	}
+
 	XmlNameValuePair(const RBX::Name& tag)
 		: tag(tag),
 		  valueType(NONE)
@@ -145,17 +163,32 @@ public:
 	bool getValue(unsigned&) const;
 	bool getValue(int&) const;
 	bool getValue(RBX::ContentId&) const;
-	bool getValue(std::string&) const;
+	bool getValue(std::string& value) const;
 
-	void setValue(RBX::InstanceHandle);
+	void setValue(RBX::InstanceHandle handle)
+	{
+		clearValue();
+		handleValue = new RBX::InstanceHandle(handle);
+		valueType = HANDLE;
+	}
 	void setValue(const RBX::Name*);
 	void setValue(float);
 	void setValue(bool);
 	void setValue(unsigned);
 	void setValue(int);
 	void setValue(const char*);
-	void setValue(RBX::ContentId);
-	void setValue(std::string);
+	void setValue(RBX::ContentId contentId)
+	{
+		clearValue();
+		contentIdValue = new RBX::ContentId(contentId);
+		valueType = CONTENTID;
+	}
+	void setValue(std::string value)
+	{
+		clearValue();
+		stringValue = new std::string(value);
+		valueType = STRING;
+	}
 
 	void replaceHandles(const std::map<RBX::Instance*, RBX::InstanceHandle>&);
 
