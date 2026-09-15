@@ -514,8 +514,6 @@ void TextXmlWriterWithEmbeddedContent::serializeNode(const XmlElement* xmlNode, 
 {
 	if (xmlNode->isValueType<RBX::ContentId>())
 	{
-		writeOpenTag(xmlNode, depth, NULL);
-
 		RBX::ContentId contentId;
 		xmlNode->getValue(contentId);
 
@@ -525,17 +523,17 @@ void TextXmlWriterWithEmbeddedContent::serializeNode(const XmlElement* xmlNode, 
 		}
 		else
 		{
-			XmlAttribute mimeTypeAttribute(tag_mimeType, contentId.mimeType().name);
+			XmlAttribute mimeTypeAttribute(tag_mimeType, contentId.mimeType().c_str());
 			writeOpenTag(xmlNode, depth, &mimeTypeAttribute);
 		}
 
-		if (xmlNode->findAttribute(name_xsinil))
+		if (!xmlNode->findAttribute(name_xsinil))
 		{
-			stream << "<null></null>";
-		}
-		else
-		{
-			if (!contentId.isNull())
+			if (contentId.isNull())
+			{
+				stream << "<null></null>";
+			}
+			else
 			{
 				if (contentId.isAsset() || contentId.isHttp())
 				{
@@ -546,29 +544,40 @@ void TextXmlWriterWithEmbeddedContent::serializeNode(const XmlElement* xmlNode, 
 				else if (embeddedContent.find(contentId) == embeddedContent.end())
 				{
 					embeddedContent.insert(contentId);
-					std::auto_ptr<std::istream> contentStream = RBX::ContentProvider::singleton().getContent(contentId);
-					if (contentId.mimeType() == RBX::Name::getNullName())
-					{
-						stream << "<binary>";
-					}
-					else
-					{
-						stream << "<binary xmime:contentType=\"" << contentId.mimeType().name << "\">";
-					}
 
-					int ioStatus = 0;
-					base64<char> encoder;
-					encoder.put(
-						std::istreambuf_iterator<char>(*contentStream.get()),
-						std::istreambuf_iterator<char>(),
-						std::ostreambuf_iterator<char>(stream),
-						ioStatus,
-						base64<>::crlf());
+					std::auto_ptr<std::istream> contentStream;
 
-					stream << "</binary>";
+					try
+					{
+						contentStream = RBX::ContentProvider::singleton().getContent(contentId);
+
+						if (contentId.mimeType() == RBX::Name::getNullName())
+						{
+							stream << "<binary>";
+						}
+						else
+						{
+							stream << "<binary xmime:contentType=\"" << contentId.mimeType().c_str() << "\">";
+						}
+
+						std::istreambuf_iterator<char> _From(contentStream->rdbuf());
+						std::istreambuf_iterator<char> _To;
+						std::ostreambuf_iterator<char> _Out(stream.rdbuf());
+						int _State;
+
+						base64<char> encoder;
+						encoder.put(_From, _To, _Out, _State, base64<>::crlf());
+
+						stream << "</binary>";
+					}
+					catch (std::exception&)
+					{
+						goto hash;
+					}
 				}
 				else
 				{
+hash:
 					embeddedContent.insert(contentId);
 
 					stream << "<hash>";

@@ -110,7 +110,10 @@ public:
 	{
 	}
 public:
-	~XmlNameValuePair();
+	~XmlNameValuePair()
+	{
+		clearValue();
+	}
 
 public:
 	const RBX::Name& getTag() const
@@ -171,8 +174,6 @@ public:
 		: XmlNameValuePair(tag, value)
 	{
 	}
-
-	~XmlAttribute();
 };
 
 class XmlElement : public RBX::Sibling<XmlElement>, public RBX::Parent<XmlElement>, public XmlNameValuePair
