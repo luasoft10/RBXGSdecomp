@@ -2,7 +2,9 @@
 #include "util/standardout.h"
 #include "util/Http.h"
 #include "v8xml/SerializerV2.h"
+#include <shlobj.h>
 #include <atlutil.h>
+#include <G3D/format.h>
 #include <boost/shared_ptr.hpp>
 
 namespace RBX
@@ -22,6 +24,26 @@ namespace RBX
 	{
 		std::string header = "rbxasset://";
 		return ContentId(header + filePath);
+	}
+
+	ContentProvider::ContentProvider()
+	{
+		char path[MAX_PATH];
+		if (SHGetFolderPathAndSubDirA(NULL, CSIDL_COMMON_APPDATA, NULL, SHGFP_TYPE_CURRENT, "Roblox\\content\\", (LPSTR)&path) == S_OK)
+		{
+			this->singleton().setAssetFolder(path);
+		}
+		else
+		{
+			StandardOut::singleton()->print(MESSAGE_WARNING, "Failed to get asset folder");
+		}
+
+		requestProcessor.reset(new worker_thread(boost::bind(&ContentProvider::processRequests, this), "rbx_content"));
+	}
+
+	ContentProvider::~ContentProvider()
+	{
+		requestProcessor->join();
 	}
 
 	bool ContentProvider::isHttpUrl(const std::string& s)
@@ -88,6 +110,22 @@ namespace RBX
 	bool ContentProvider::hasContent(ContentId id)
 	{
 		return loadContent(id, NoHttpRequest) != NULL;
+	}
+
+	std::string ContentProvider::getAssetFile(const std::string& filePath)
+	{
+		return getFile(ContentId::fromAssets(filePath));
+	}
+
+	std::string ContentProvider::getFile(ContentId ticket)
+	{
+		CachedContent* content = loadContent(ticket, SyncHttpRequest);
+		if (content && registerFile(content))
+		{
+			return *content->filename;
+		}
+
+		throw std::runtime_error(G3D::format("Unable to load %s", ticket.c_str()));
 	}
 
 	ContentProvider::FailedUrl::FailedUrl(const char* url)
