@@ -119,6 +119,73 @@ namespace RBX
 		static const G3D::Color4& translucentBackdrop();
 		static const G3D::Color4& toolboxColor();
 	};
+	
+	class UnifiedWidget : public GuiItem
+	{
+	public:
+		enum MenuState
+		{
+			NOTHING,
+			HOVER,
+			SHOWN_APPEARING,
+			SHOWN
+		};
+
+	private:
+		MenuState menuState;
+
+	private:
+		GuiResponse processShown_InTitle(const GuiEvent&);
+		GuiResponse processShown_OutOfTitle(const GuiEvent&);
+		GuiResponse processNothing(const GuiEvent&);
+		GuiResponse processHover(const GuiEvent&);
+		GuiResponse processShown(const GuiEvent&);
+		GuiResponse processKey(const GuiEvent&);
+		void render2dChildren(Adorn*);
+		virtual G3D::Vector2 getChildPosition(const GuiItem*) const;
+		virtual bool canLoseFocus();
+		virtual void onLoseFocus();
+		virtual int getFontSize() const;
+		void init();
+	protected:
+		bool showChildren();
+		virtual void onMenuStateChanged();
+		virtual G3D::Vector2 firstChildPosition() const;
+		virtual G3D::Vector2 childOffset() const;
+		virtual void render2dMe(Adorn*);
+	public:
+		UnifiedWidget(const std::string&);
+		UnifiedWidget();
+		MenuState getMenuState() const;
+		void setMenuState(MenuState);
+		virtual GuiResponse process(const GuiEvent&);
+		virtual void render2d(Adorn*);
+	};
+
+	class TextDisplay : public GuiItem
+	{
+	protected:
+		std::string label;
+		int fontSize;
+		G3D::Color4 fontColor;
+		G3D::Color4 borderColor;
+		Adorn::XAlign align;
+
+	private:
+		void init();
+	protected:
+		virtual int getFontSize() const;
+		virtual std::string getLabel() const;
+	public:
+		TextDisplay(const std::string&, const std::string&);
+		TextDisplay();
+		virtual void render2d(Adorn*);
+		void setLabel(const std::string&);
+		void setFontSize(int);
+		void setFontColor(const G3D::Color4&);
+		void setBorderColor(const G3D::Color4&);
+		void setAlign(Adorn::XAlign);
+	};
 
 	class TopMenuBar : public GuiItem
 	{
@@ -168,6 +235,18 @@ namespace RBX
 		virtual G3D::Vector2 getPosition() const;
 	};
 
+	class PercentPanel : public TopMenuBar
+	{
+	protected:
+		Rect::Location xLocation;
+		Rect::Location yLocation;
+		G3D::Vector2 position;
+
+	public:
+		PercentPanel(Rect::Location, Rect::Location, const G3D::Vector2);
+		virtual G3D::Vector2 getPosition() const;
+	};
+
 	class GuiRoot : public GuiItem
 	{
 	private:
@@ -198,5 +277,22 @@ namespace RBX
 		}
 		static G3D::Vector2 toPixelSize(const G3D::Vector2&);
 		static int normalizedFontSize(int fontSize);
+	};
+
+	class MenuSpacer : public GuiItem
+	{
+	protected:
+		void addItem(GuiItem*);
+	public:
+		MenuSpacer(float, float);
+	};
+
+	class MenuDivider : public MenuSpacer
+	{
+	public:
+		MenuDivider(float, float);
+		MenuDivider(float);
+		MenuDivider();
+		virtual void render2d(Adorn*);
 	};
 }

@@ -870,6 +870,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\include\v8datamodel\GuiBuilder.h"
+					>
+				</File>
+				<File
 					RelativePath=".\include\v8datamodel\Gyro.h"
 					>
 				</File>
@@ -998,6 +1002,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\include\v8datamodel\ToolsPart.h"
+					>
+				</File>
+				<File
 					RelativePath=".\include\v8datamodel\UserController.h"
 					>
 				</File>
@@ -1058,6 +1066,30 @@
 				Name="gui"
 				>
 				<File
+					RelativePath=".\include\gui\ArrowPanel.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\gui\Button.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\gui\ChatOutput.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\gui\ChatWidget.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\gui\ColorPicker.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\gui\EquationDisplay.h"
+					>
+				</File>
+				<File
 					RelativePath=".\include\gui\Gui.h"
 					>
 				</File>
@@ -1070,7 +1102,27 @@
 					>
 				</File>
 				<File
+					RelativePath=".\include\gui\HealthHud.h"
+					>
+				</File>
+				<File
 					RelativePath=".\include\gui\Layout.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\gui\MenuItem.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\gui\ProfanityFilter.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\gui\RadioPanel.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\gui\ScoreHud.h"
 					>
 				</File>
 				<File

@@ -21,15 +21,7 @@ namespace RBX
 			float _groundLOD;
 			float _LODShift;
 		public:
-			G3D::ReferenceCountedPointer<G3D::Lighting> update(
-				float,
-				float,
-				bool,
-				float,
-				const G3D::ReferenceCountedPointer<G3D::Lighting>&,
-				const G3D::LightingParameters&,
-				G3D::LightingParameters&
-			);
+			G3D::ReferenceCountedPointer<G3D::Lighting> update(float, float, bool, float, const G3D::ReferenceCountedPointer<G3D::Lighting>&, const G3D::LightingParameters&, G3D::LightingParameters&);
 
 			bool stencilShadows() const
 			{

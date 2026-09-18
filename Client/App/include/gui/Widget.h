@@ -1,5 +1,6 @@
 #pragma once
 #include "gui/Gui.h"
+#include "v8tree/Verb.h"
 
 namespace RBX
 {
@@ -67,5 +68,31 @@ namespace RBX
 
 	public:
 		Widget();
+	};
+
+	class VerbWidget : public Widget
+	{
+	private:
+		Verb* verb;
+
+	protected:
+		Verb* getVerb();
+		virtual bool isEnabled();
+		virtual void onClick(const GuiEvent&);
+	public:
+		VerbWidget(Verb*);
+		VerbWidget();
+		virtual ~VerbWidget();
+	};
+
+	class MultiVerbWidget : public Widget
+	{
+	protected:
+		virtual Verb* currentVerb();
+		virtual bool isEnabled();
+		virtual void onClick(const GuiEvent&);
+	public:
+		MultiVerbWidget(const std::string&);
+		virtual ~MultiVerbWidget();
 	};
 }
