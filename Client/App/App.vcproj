@@ -842,7 +842,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\include\v8datamodel\FactoryRegistration.h"
+					RelativePath=".\include\v8datamodel\factoryregistration.h"
 					>
 				</File>
 				<File
@@ -1603,7 +1603,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\v8datamodel\FactoryRegistration.cpp"
+				RelativePath=".\v8datamodel\factoryregistration.cpp"
 				>
 			</File>
 			<File

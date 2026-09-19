@@ -1,4 +1,4 @@
-#include "v8datamodel/FactoryRegistration.h"
+#include "v8datamodel/factoryregistration.h"
 #include "v8datamodel/Lighting.h"
 #include "v8datamodel/Accoutrement.h"
 #include "v8datamodel/Backpack.h"
