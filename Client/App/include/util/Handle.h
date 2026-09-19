@@ -10,10 +10,13 @@ namespace RBX
 		boost::shared_ptr<Instance> target;
 	  
 	public:
-		//InstanceHandle(const InstanceHandle&);
+		InstanceHandle(const InstanceHandle& other)
+			: target(other.target)
+		{
+		}
 		InstanceHandle(boost::shared_ptr<Instance> target);
 		InstanceHandle(Instance* target);
-		InstanceHandle() 
+		InstanceHandle()
 		{
 		}
 	public:
@@ -22,7 +25,11 @@ namespace RBX
 			linkTo(object);
 			return *this;
 		}
-		//InstanceHandle& operator=(const InstanceHandle&);
+		InstanceHandle& operator=(const InstanceHandle& other)
+		{
+			this->target = other.target;
+			return *this;
+		}
 		bool empty() const;
 		boost::shared_ptr<Instance> getTarget() const;
 		void linkTo(boost::shared_ptr<Instance> target);
