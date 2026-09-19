@@ -131,11 +131,11 @@ public:
 public:
 	void loadInstances(XmlElement*, std::vector<boost::shared_ptr<RBX::Instance>>&);
 	void load(std::istream&, RBX::DataModel*);
-	void loadXML(std::istream&, RBX::DataModel*);
+	void loadXML(std::istream& stream, RBX::DataModel* dataModel);
 	void merge(const XmlElement*, RBX::DataModel*);
   
 public:
 	static XmlElement* newRootElement();
 	static void isolateHandles(XmlElement* root);
-	static void load(XmlElement*, RBX::DataModel*);
+	static void load(XmlElement* root, RBX::DataModel* dataModel);
 };

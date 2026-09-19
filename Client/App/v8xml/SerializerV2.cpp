@@ -1,5 +1,5 @@
 #include "v8xml/SerializerV2.h"
-#include "v8tree/Instance.h"
+#include "v8datamodel/DataModel.h"
 #include <boost/bind.hpp>
 #include <algorithm>
 
@@ -119,4 +119,36 @@ XmlElement* SerializerV2::newRootElement()
 	thisElement->pushBackChild(new XmlElement(tag_External, &value_IDREF_nil));
 
 	return thisElement;
+}
+
+void SerializerV2::load(XmlElement* root, RBX::DataModel* dataModel)
+{
+	ArchiveBinder binder;
+	dataModel->readChildren(root, binder);
+
+	binder.resolveRefs();
+}
+
+void SerializerV2::loadXML(std::istream& stream, RBX::DataModel* dataModel)
+{
+	TextXmlParser machine(stream.rdbuf());
+	std::auto_ptr<XmlElement> root = machine.parse();
+
+	if (root->getTag() == tag_roblox)
+	{
+		XmlAttribute* version = root->findAttribute(tag_version);
+		if (!version->getValue(schemaVersionLoading))
+			throw std::runtime_error("SerializerV2::loadXML no version number");
+
+		if (schemaVersionLoading < 4)
+			throw std::runtime_error("SerializerV2::loadXML schemaVersionLoading<4");
+
+		load(root.get(), dataModel);
+		dataModel->setDirty(false);
+	}
+	else
+	{
+		schemaVersionLoading = 1;
+		throw std::runtime_error("SerializerV2::loadXML ill-formed XML. No Roblox tag");
+	}
 }
