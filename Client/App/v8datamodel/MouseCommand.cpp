@@ -124,4 +124,19 @@ namespace RBX
 		RBXASSERT(!workspace->getCurrentMouseCommand()->captured());
 		capturedMouse = true;
 	}
+
+	Instance* MouseCommand::getTopSelectable3d(PartInstance* part)
+	{
+		Instance* current = part;
+		Instance* top = part;
+
+		while (!dynamic_cast<Workspace*>(current->getParent()))
+		{
+			current = current->getParent();
+			if (dynamic_cast<ISelectable3d*>(current))
+				top = current;
+		}
+		
+		return top;
+	}
 }
