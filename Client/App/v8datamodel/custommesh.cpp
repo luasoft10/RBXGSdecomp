@@ -18,6 +18,11 @@ namespace RBX
 		setName("Mesh");
 	}
 
+	bool SpecialShape::askSetParent(const Instance* instance) const
+	{
+		return dynamic_cast<const PartInstance*>(instance) != NULL;
+	}
+
 	const TextureId SpecialShape::getTextureId() const
 	{
 		return textureId;

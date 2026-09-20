@@ -57,6 +57,6 @@ namespace RBX
 		const TextureId getTextureId() const;
 		void setTextureId(const TextureId& value);
 	protected:
-		virtual bool askSetParent(const Instance*) const;
+		virtual bool askSetParent(const Instance* instance) const;
 	};
 }
