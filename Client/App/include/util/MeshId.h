@@ -6,7 +6,6 @@ namespace RBX
 	class MeshId : public ContentId
 	{
 	public:
-		//MeshId(const MeshId&);
 		MeshId()
 			: ContentId()
 		{
@@ -23,10 +22,5 @@ namespace RBX
 			: ContentId(id)
 		{
 		}
-		~MeshId()
-		{
-		}
-	public:
-		//MeshId& operator=(const MeshId&);
 	};
 }

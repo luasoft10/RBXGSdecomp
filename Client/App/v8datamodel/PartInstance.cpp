@@ -295,7 +295,7 @@ namespace RBX
 	Part PartInstance::computePersistentPart() const
 	{
 		const G3D::CoordinateFrame& cframe = primitive->getCoordinateFrame();
-		float transparency = 1.0f - getTransparencyUi();
+		float transparency = 1.0f - alpha();
 
 		return Part(partType, getPartSizeXml(), G3D::Color4(getColor3(), transparency), surfaces.surf6(), cframe);
 	}
@@ -482,7 +482,7 @@ namespace RBX
 
 		if (showAnchoredParts && primitive->getAnchor())
 		{
-			float transparency = 1.0f - getTransparencyUi();
+			float transparency = 1.0f - alpha();
 			G3D::Color4 color(G3D::Color3::gray(), transparency);
 			const G3D::CoordinateFrame& cframe = primitive->getCoordinateFrame();
 

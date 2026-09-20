@@ -155,7 +155,7 @@ namespace RBX
 		}
 		float getTransparencyUi() const
 		{
-			return 1.0f - (1.0f - transparency) * alphaModifier;
+			return (1.0f - transparency) * alphaModifier;
 		}
 		bool getIsTransparent() const
 		{
@@ -187,7 +187,10 @@ namespace RBX
 		}
 		void setPartLocked(bool value);
 		const Part& getPart() const;
-		float alpha() const;
+		float alpha() const
+		{
+			return 1.0f - getTransparencyUi();
+		}
 		bool lockedInPlace() const;
 		bool aligned() const;
 		G3D::CoordinateFrame worldSnapLocation() const;

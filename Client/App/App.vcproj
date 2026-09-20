@@ -818,6 +818,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\include\v8datamodel\custommesh.h"
+					>
+				</File>
+				<File
 					RelativePath=".\include\v8datamodel\DataModel.h"
 					>
 				</File>
@@ -1576,6 +1580,10 @@
 			</File>
 			<File
 				RelativePath=".\v8datamodel\CharacterAppearance.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\v8datamodel\custommesh.cpp"
 				>
 			</File>
 			<File
