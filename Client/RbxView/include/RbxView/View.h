@@ -32,7 +32,7 @@ namespace RBX
 			std::auto_ptr<MaterialFactory> materialFactory;
 
 		public:
-			View(boost::shared_ptr<DataModel>);
+			View(boost::shared_ptr<DataModel> dataModel);
 			virtual ~View();
 			virtual void render(void*);
 			G3D::ReferenceCountedPointer<Render::Material> getMaterial(G3D::ReferenceCountedPointer<Render::Material>);

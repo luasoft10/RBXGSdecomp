@@ -200,6 +200,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\View.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\WedgeMesh.cpp"
 				>
 			</File>

@@ -85,7 +85,12 @@ namespace RBX
 		}
 
 		virtual bool isStackTooBig() const;
-		Workspace* getWorkspace() const;
+
+		Workspace* getWorkspace() const
+		{
+			return workspace.get();
+		}
+
 		float step(float);
 		float getSimTime() const;
 		TimeState* getTimeState();
