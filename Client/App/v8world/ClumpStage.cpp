@@ -682,7 +682,7 @@ namespace RBX
 
 		while (!motors.empty())
 		{
-			MotorJoint* m = motors.back();
+			MotorJoint* m = *--motors.end();
 			motors.pop_back();
 
 			Assembly* a0 = m->getPrimitive(0)->getAssembly();
@@ -691,19 +691,16 @@ namespace RBX
 			Clump* c0 = m->getPrimitive(0)->getClump();
 			Clump* c1 = m->getPrimitive(1)->getClump();
 
-			if (a0)
+			if (a0 && a1)
 			{
-				if (a1)
-				{
-					a0->addInconsistentMotor(m);
-					if (a0 != a1)
-						a1->addInconsistentMotor(m);
-				}
-				else
-				{
-					freeClumpsErase(c1);
-					a0->addClump(c1, m);
-				}
+				a0->addInconsistentMotor(m);
+				if (a0 != a1)
+					a1->addInconsistentMotor(m);
+			}
+			else if (a0)
+			{
+				freeClumpsErase(c1);
+				a0->addClump(c1, m);
 			}
 			else if (a1)
 			{
@@ -719,22 +716,8 @@ namespace RBX
 			}
 			else
 			{
-				const Primitive* p1 = c1->getRootPrimitive();
-				const Primitive* p0 = c0->getRootPrimitive();
-
-				Clump* root;
-				Clump* child;
-
-				if (PrimitiveSort(p0) < PrimitiveSort(p1))
-				{
-					root = c1;
-					child = c0;
-				}
-				else
-				{
-					root = c0;
-					child = c1;
-				}
+				Clump* root = (PrimitiveSort(c0->getRootPrimitive()) < PrimitiveSort(c1->getRootPrimitive()) ? c1 : c0); 
+				Clump* child = (root == c0 ? c1 : c0);
 
 				freeClumpsErase(root);
 				freeClumpsErase(child);
