@@ -8,7 +8,6 @@ namespace RBX
 	class ViewBase
 	{
 	public:
-		//ViewBase(const ViewBase&);
 		ViewBase()
 		{
 		}
@@ -27,8 +26,6 @@ namespace RBX
 		virtual void onWorkspaceDescendentAdded(boost::shared_ptr<Instance> descendent) = 0;
 		virtual void updateLighting() = 0;
 		virtual void invalidateLighting(bool updateSkybox) = 0;
-	public:
-		//ViewBase& operator=(const ViewBase&);
 	  
 	public:
 		static bool& getShadowsEnabled()

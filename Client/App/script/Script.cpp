@@ -1,4 +1,5 @@
 #include "script/Script.h"
+#include "script/ScriptContext.h"
 #include "v8tree/Service.h"
 #include "boost/thread/once.hpp"
 

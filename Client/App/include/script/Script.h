@@ -1,5 +1,4 @@
 #pragma once
-#include "script/ScriptContext.h"
 #include "v8tree/Instance.h"
 #include "boost/shared_ptr.hpp"
 #include "boost/signals.hpp"
@@ -79,7 +78,7 @@ namespace RBX
 		friend class Script;
 
 	protected:
-		virtual IScriptOwner* scriptShouldRun(Script* script);
+		virtual IScriptOwner* scriptShouldRun(Script* script) = 0;
 		virtual void runScript(Script* script, ScriptContext* context);
 		virtual void releaseScript(Script* script);
 	};

@@ -3,6 +3,7 @@
 #include <GetTime.h>
 #include "Replicator.h"
 #include "NetworkSettings.h"
+#include "security/SecurityContext.h"
 #include "v8datamodel/Stats.h"
 #include "v8datamodel/PartInstance.h"
 #include "v8world/SimJobStage.h"

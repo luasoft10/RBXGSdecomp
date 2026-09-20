@@ -20,7 +20,6 @@ namespace RBX
 		void setMovingManager(IMovingManager* _iMovingManager);
 		bool checkSleep();
 	public:
-		//IMoving(const IMoving&);
 		IMoving();
 		~IMoving()
 		{
@@ -33,7 +32,6 @@ namespace RBX
 		{
 			return stepsToSleep == 0;
 		}
-		//IMoving& operator=(const IMoving&);
 	};
 
 	class IMovingManager
@@ -47,11 +45,9 @@ namespace RBX
 		void remove(IMoving* iMoving);
 		void moved(IMoving* iMoving);
 	public:
-		//IMovingManager(const IMovingManager&);
 		IMovingManager();
 		virtual ~IMovingManager();
 	public:
 		void onMovingHeartbeat();
-		//IMovingManager& operator=(const IMovingManager&);
 	};
 }

@@ -442,6 +442,9 @@ namespace RBX
 		Type* findFirstChildOfType() const;
 
 		template<typename Function>
+		void visitChildren(Function func) const;
+
+		template<typename Function>
 		void visitDescendents(Function func) const
 		{
 			if (children)

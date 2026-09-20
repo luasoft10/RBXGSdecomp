@@ -262,6 +262,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\RbxView\View.h"
+				>
+			</File>
+			<File
 				RelativePath=".\WedgeMesh.h"
 				>
 			</File>

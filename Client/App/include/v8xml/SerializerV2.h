@@ -1,6 +1,6 @@
 #pragma once
 #include "v8xml/XmlSerializer.h"
-#include "reflection/reflection.h"
+#include "v8tree/Instance.h"
 
 namespace RBX
 {

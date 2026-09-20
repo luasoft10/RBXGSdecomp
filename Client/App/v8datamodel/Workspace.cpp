@@ -5,6 +5,7 @@
 #include "v8datamodel/Camera.h"
 #include "v8datamodel/Hopper.h"
 #include "v8datamodel/Selection.h"
+#include "script/ScriptContext.h"
 #include "humanoid/Humanoid.h"
 #include "v8world/World.h"
 #include "tool/NullTool.h"
