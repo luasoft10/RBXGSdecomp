@@ -180,13 +180,13 @@ namespace RBX
 
 		if (instances.size() == 1)
 		{
-			HopperBin* hopperBin = dynamic_cast<HopperBin*>(instances[0].get());
-			if (hopperBin)
+			Instance* instance = instances[0].get();
+			if (dynamic_cast<HopperBin*>(instance))
 			{
 				Network::Player* localPlayer = Network::Players::findLocalPlayer(this);
 				if (localPlayer)
 				{
-					hopperBin->setParent(localPlayer->getPlayerBackpack());
+					instance->setParent(localPlayer->getPlayerBackpack());
 					return;
 				}
 			}
