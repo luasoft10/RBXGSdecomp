@@ -56,7 +56,7 @@ namespace RBX
 			virtual G3D::ReferenceCountedPointer<Render::Material> getMaterial();
 		protected:
 			virtual void onPropertyChanged(const Reflection::PropertyDescriptor*);
-			virtual void onEvent(const PartInstance*, CanAggregateChanged);
+			virtual void onEvent(const PartInstance* source, CanAggregateChanged event);
 		private:
 			bool usesMegaTexture() const;
 			virtual void updateMesh();

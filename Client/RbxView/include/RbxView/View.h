@@ -34,18 +34,18 @@ namespace RBX
 		public:
 			View(boost::shared_ptr<DataModel> dataModel);
 			virtual ~View();
-			virtual void render(void*);
+			virtual void render(void* rd);
 			G3D::ReferenceCountedPointer<Render::Material> getMaterial(G3D::ReferenceCountedPointer<Render::Material>);
 			virtual float getShadingQuality() const;
 			virtual float getMeshDetail() const;
-			virtual void updateSettings(float, float, bool, float);
+			virtual void updateSettings(float shadingQuality, float meshDetail, bool shadows, float cameraDistance);
 			virtual void suppressSkybox();
 			virtual Instance* getWorkspace();
 			virtual RenderStats& getRenderStats();
 		private:
-			virtual void onWorkspaceDescendentAdded(boost::shared_ptr<Instance>);
+			virtual void onWorkspaceDescendentAdded(boost::shared_ptr<Instance> descendent);
 			virtual void updateLighting();
-			virtual void invalidateLighting(bool);
+			virtual void invalidateLighting(bool updateSkybox);
 		};
 	}
 }

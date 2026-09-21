@@ -42,7 +42,11 @@ namespace RBX
 			static Mesh* create(const G3D::Vector3&, RenderSurfaceTypes);
 			static Mesh* createDecal(const G3D::Vector3&, NormalId);
 			static Mesh* createTexture(const G3D::Vector3&, NormalId, const G3D::Vector2&);
-			static void flushCache();
+			static void flushCache()
+			{
+				cache1.clear();
+				decalCache.clear();
+			}
 		};
 	}
 }

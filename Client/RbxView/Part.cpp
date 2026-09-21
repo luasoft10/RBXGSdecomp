@@ -122,5 +122,10 @@ namespace RBX
 		{
 			Notifier<PartInstance, CanAggregateChanged>::disconnect(partInstance, this);
 		}
+
+		void Part::onEvent(const PartInstance* source, CanAggregateChanged event)
+		{
+			view->sceneManager->setSleeping(this, event.canClump);
+		}
 	}
 }

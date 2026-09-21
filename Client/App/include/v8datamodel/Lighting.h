@@ -36,7 +36,11 @@ namespace RBX
 			return skyParameters;
 		}
 
-		G3D::Color4 getClearColor() const;
+		G3D::Color4 getClearColor() const
+		{
+			return clearColor;
+		}
+
 		void setClearColor(G3D::Color4 value);
 
 		G3D::Color3 getLightColor() const

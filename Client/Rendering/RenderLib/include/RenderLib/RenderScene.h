@@ -58,17 +58,21 @@ namespace RBX
 			void debugShowTextures(G3D::RenderDevice*, const G3D::GCamera&);
 			void renderShadowVolumeGeometry(G3D::RenderDevice* rd, const G3D::GLight& light, bool caps, float shadowVertexDistance);
 		public:
-			//RenderScene(const RenderScene&);
 			RenderScene();
 			~RenderScene();
 
 			void presetLighting(G3D::ReferenceCountedPointer<G3D::Sky> sky, G3D::LightingParameters skyParameters, G3D::Color3 ambientTop, G3D::Color3 ambientBottom);
 			void setLighting(const G3D::ReferenceCountedPointer<G3D::Lighting>& L);
 			void setThrottle(float t, float m, bool s, float c);
-			float getShadingQuality() const;
-			float getMeshDetail() const;
+			float getShadingQuality() const
+			{
+				return shadingQuality;
+			}
+			float getMeshDetail() const
+			{
+				return meshDetail;
+			}
 			void render(G3D::RenderDevice* rd, const G3D::GCamera& camera);
-			//RenderScene& operator=(const RenderScene&);
 		};
 
 		class SceneManager
@@ -83,7 +87,6 @@ namespace RBX
 			virtual void setSleeping(const G3D::ReferenceCountedPointer<Chunk>&, bool) = 0;
 			virtual void prerender(double) = 0;
 			virtual ~SceneManager() {}
-			//SceneManager(const SceneManager&);
 		protected:
 			SceneManager(RenderScene* renderScene)
 				: renderScene(renderScene)
