@@ -46,7 +46,10 @@ namespace RBX
   
 	public:
 		ChildRemoved(const ChildRemoved&);
-		ChildRemoved(Instance*);
+		ChildRemoved(Instance* child)
+			: child(shared_from(child))
+		{
+		}
 	private:
 		ChildRemoved& operator=(const ChildRemoved&);
 	};
@@ -91,7 +94,12 @@ namespace RBX
 		Instance* newParent;
 	  
 	public:
-		AncestorChanged(Instance*, Instance*, Instance*);
+		AncestorChanged(Instance* child, Instance* oldParent, Instance* newParent)
+			: child(child),
+			  oldParent(oldParent),
+			  newParent(newParent)
+		{
+		}
 	};
 
 	class PropertyChanged
@@ -205,7 +213,7 @@ namespace RBX
 		{
 			return getClassName().toString();
 		}
-		void setParent(Instance*);
+		void setParent(Instance* newParent);
 		void setParent2(boost::shared_ptr<Instance> instance) // 100% match with /GS flag
 		{
 			setParent(instance.get());
