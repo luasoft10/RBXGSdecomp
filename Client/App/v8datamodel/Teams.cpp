@@ -126,4 +126,9 @@ namespace RBX
 			myTeams->erase(std::find(myTeams->begin(), myTeams->end(), shared_from(child)));
 		}
 	}
+
+	void Teams::rebalanceTeams()
+	{
+		return;
+	}
 }
